@@ -2,6 +2,8 @@
 
 @section('title', 'RevoTech - Premium Electronics')
 
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+
 @section('content')
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-blue-50 to-purple-50 dark:from-dark-surface dark:to-dark-bg overflow-hidden">
