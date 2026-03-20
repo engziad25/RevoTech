@@ -24,16 +24,31 @@ RUN composer install --no-dev --optimize-autoloader
 # إعداد الصلاحيات
 RUN chmod -R 775 storage bootstrap/cache
 
+# حذف ملفات Laravel المؤقتة
+RUN rm -rf /var/www/html
+
 # إعداد Nginx
-COPY docker/nginx.conf /etc/nginx/sites-available/default
+RUN echo "server {
+    listen 8000;
+    server_name _;
+    root /app/public;
+    index index.php;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}" > /etc/nginx/sites-available/default
 
 # تحديد المنفذ
 ENV PORT=8000
 EXPOSE $PORT
 
 # بدء الخدمات
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    service nginx start && \
-    php-fpm -F
+CMD service nginx start && php-fpm -F
