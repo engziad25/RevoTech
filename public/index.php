@@ -3,6 +3,12 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
+// أضف السطرين دول في البداية
+$port = getenv('PORT') ?: 3000;
+$_SERVER['SERVER_PORT'] = $port;
+$_ENV['SERVER_PORT'] = $port;
+
+// باقي الكود الموجود...
 define('LARAVEL_START', microtime(true));
 
 // Determine if the application is in maintenance mode...
